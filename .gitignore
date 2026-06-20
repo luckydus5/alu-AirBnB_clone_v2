@@ -1,0 +1,10 @@
+# Fabric archives
+versions/
+*.tgz
+
+# Python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
