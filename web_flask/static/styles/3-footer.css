@@ -1,0 +1,14 @@
+FOOTER {
+    height: 60px;
+    width: 100%;
+    background-color: #FFFFFF;
+    border-top: 1px solid #CCCCCC;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+}
+
+FOOTER P {
+    line-height: 60px;
+    margin: 0;
+}

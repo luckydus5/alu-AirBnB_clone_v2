@@ -1,0 +1,20 @@
+html {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #484848;
+    font-size: 14px;
+}
+
+.container {
+    width: 1000px;
+    margin: 30px auto;
+    min-height: 615px;
+}
