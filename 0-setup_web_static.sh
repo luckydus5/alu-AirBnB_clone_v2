@@ -15,13 +15,14 @@ mkdir -p /data/web_static/releases/test/
 mkdir -p /data/web_static/shared/
 
 # Create a fake HTML file to test the Nginx configuration
-echo "<html>
-  <head>
-  </head>
-  <body>
-    Holberton School
-  </body>
-</html>" > /data/web_static/releases/test/index.html
+printf '%s\n' \
+    "<html>" \
+    "  <head>" \
+    "  </head>" \
+    "  <body>" \
+    "    Holberton School" \
+    "  </body>" \
+    "</html>" > /data/web_static/releases/test/index.html
 
 # (Re)create the symbolic link 'current' pointing to the test release
 ln -sf /data/web_static/releases/test/ /data/web_static/current
@@ -29,9 +30,24 @@ ln -sf /data/web_static/releases/test/ /data/web_static/current
 # Give ownership of /data/ recursively to the ubuntu user and group
 chown -R ubuntu:ubuntu /data/
 
-# Update the Nginx configuration to serve /data/web_static/current/ at /hbnb_static
-new_location="\\\n\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}\n"
-sed -i "/listen 80 default_server;/a $new_location" /etc/nginx/sites-available/default
+# Write the Nginx server config, serving /data/web_static/current/
+# at /hbnb_static with alias. Rewriting the whole file keeps the script
+# idempotent (re-runs never stack duplicate location blocks).
+config="server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    root /var/www/html;
+    index index.html index.htm;
+    add_header X-Served-By \$hostname;
+    location /hbnb_static/ {
+        alias /data/web_static/current/;
+    }
+    location / {
+        try_files \$uri \$uri/ =404;
+    }
+}"
+echo "$config" > /etc/nginx/sites-available/default
+ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
 # Restart Nginx to apply the new configuration
 service nginx restart
